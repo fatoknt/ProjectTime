@@ -2,7 +2,7 @@
 #main.py
 
 import click
-from database.database import get_connection
+from database.database import get_connection, create_table_employees
 
 @click.group()
 def cli():
@@ -19,3 +19,7 @@ def test_db_connection():
 
 if __name__ == "__main__":
     cli()
+
+@cli.command()
+def create_employee_table():
+    """employees テーブルを作成"""
