@@ -6,7 +6,7 @@ import os.path
 
 class Database:
     """DB接続の基底クラス"""
-    def __init__(self, db_name="projecttime.db"):
+    def __init__(self, db_name="projecttime.db") -> None:
         """DBに接続する
 
         Args:
@@ -29,7 +29,7 @@ class Database:
         """with構文に入った時呼び出される"""
         return self
 
-    def __exit__(self, exc_type, exc_value, traceback):
+    def __exit__(self, _exc_type, _exc_value, _traceback) -> None:
         """with構文から抜ける時に呼び出される"""
         self.conn.close()
 
