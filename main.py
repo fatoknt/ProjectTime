@@ -2,7 +2,7 @@
 #main.py
 
 import click
-from database.database import get_connection, create_table_employees
+from database.base import Database
 
 @click.group()
 def cli():
