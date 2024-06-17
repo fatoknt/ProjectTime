@@ -58,3 +58,42 @@ class EmployeeTable(Database):
         """
         with self as db:
             return db.execute("SELECT * FROM employees").fetchall()
+
+    def get_employee_by_id(self, employee_id: int) -> tuple | None:
+        """ 指定されたIDの従業員を取得します。
+
+        Args:
+            employee_id (ind): 従業員ID
+
+        Returns:
+            tuple | None: 従業員情報(employee_id, name), 存在しない場合はNoneを返す。
+        """
+        with self as db:
+            db.execute("SELECT * FROM employees WHERE employee_id = ?", (employee_id, )).fetchone()
+
+    def update_employee(self, employee_id: int, new_name: str) -> bool:
+        """ 指定された従業員の名前を更新します。
+
+        Arsg:
+            employee_id(int): 従業員ID
+            new_name(str): 新しい従業員の名前
+
+        Returns:
+            bool: 更新に成功したら True, 失敗したら False を返す。
+        """
+        with self as db:
+            try:
+                db.execute("UPDATE employees SET name = ? WHERE employee_id = ?", (new_name, employee_id))
+                return True
+            except sqlite3.IntegrityError:
+                print(f"エラー: 既に同じ名前の従業員が存在します。")
+                return False
+
+    def daleate_employee(self, employee_id: int) -> None:
+        """ 指定されたIDの従業員をテーブルから削除します。
+
+        Arsg:
+            employee_id(int): 削除する従業員のID
+        """
+        with self as db:
+            db.execute("DELETE FROM employees WHERE employee_id = ?", (employee_id, ))
