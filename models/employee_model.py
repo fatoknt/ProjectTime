@@ -3,6 +3,6 @@
 from dataclasses import dataclass
 
 @dataclass
-class Employee:
+class EmployeeModel:
     employee_id: int
     name: str
