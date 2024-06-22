@@ -17,13 +17,12 @@ class EmployeeTable(Database):
             bool: テーブル作成の成功(True) または失敗 (False)
         """
         try:
-            with self as db:
-                db.execute(sql = '''
-                            CREATE TABLE IF NOT EXISTS employees (
-                            employee_id INTEGER PRIMARY KEY AUTOINCREMENT,
-                            name TEXT NOT NULL UNIQUE
-                                )
-                           ''')
+            self.execute(sql = '''
+                        CREATE TABLE IF NOT EXISTS employees (
+                        employee_id INTEGER PRIMARY KEY AUTOINCREMENT,
+                        name TEXT NOT NULL UNIQUE
+                            )
+                       ''')
             return True
         except sqlite3.Error as e:
             print(f"employee テーブル作成失敗エラー: {e}")
@@ -39,10 +38,9 @@ class EmployeeTable(Database):
             int | None: 追加された従業員のID。失敗した場合は None を返します。
         """
         try:
-            with self as db:
-                cursor: sqlite3.Cursor = db.execute(
-                    "INSERT INTO employees (name) VALUES (?)", (name, ))
-                return cursor.lastrowid
+            cursor: sqlite3.Cursor = self.execute(
+                "INSERT INTO employees (name) VALUES (?)", (name, ))
+            return cursor.lastrowid
         except sqlite3.IntegrityError:
             print(f"エラー: 既に同じ名前の従業員が存在します。")
             return None
@@ -54,10 +52,9 @@ class EmployeeTable(Database):
         """ employees テーブルからすべての従業員を取得します。
 
         Returns:
-            list[tuple]: 従業員情報 (employee_id, name), 存在しない場合は None を返します
+            list[tuple]: 従業員情報 (employee_id, name)のリスト、従業員がいない場合は空のリストを返します。
         """
-        with self as db:
-            return db.execute("SELECT * FROM employees").fetchall()
+        return self.execute("SELECT * FROM employees").fetchall()
 
     def get_employee_by_id(self, employee_id: int) -> tuple | None:
         """ 指定されたIDの従業員を取得します。
@@ -68,8 +65,7 @@ class EmployeeTable(Database):
         Returns:
             tuple | None: 従業員情報(employee_id, name), 存在しない場合はNoneを返す。
         """
-        with self as db:
-            db.execute("SELECT * FROM employees WHERE employee_id = ?", (employee_id, )).fetchone()
+        return self.execute("SELECT * FROM employees WHERE employee_id = ?", (employee_id, )).fetchone()
 
     def update_employee(self, employee_id: int, new_name: str) -> bool:
         """ 指定された従業員の名前を更新します。
@@ -81,19 +77,17 @@ class EmployeeTable(Database):
         Returns:
             bool: 更新に成功したら True, 失敗したら False を返す。
         """
-        with self as db:
-            try:
-                db.execute("UPDATE employees SET name = ? WHERE employee_id = ?", (new_name, employee_id))
-                return True
-            except sqlite3.IntegrityError:
-                print(f"エラー: 既に同じ名前の従業員が存在します。")
-                return False
+        try:
+            self.execute("UPDATE employees SET name = ? WHERE employee_id = ?", (new_name, employee_id))
+            return True
+        except sqlite3.IntegrityError:
+            print(f"エラー: 既に同じ名前の従業員が存在します。")
+            return False
 
-    def daleate_employee(self, employee_id: int) -> None:
+    def delete_employee(self, employee_id: int) -> None:
         """ 指定されたIDの従業員をテーブルから削除します。
 
         Arsg:
             employee_id(int): 削除する従業員のID
         """
-        with self as db:
-            db.execute("DELETE FROM employees WHERE employee_id = ?", (employee_id, ))
+        self.execute("DELETE FROM employees WHERE employee_id = ?", (employee_id, ))

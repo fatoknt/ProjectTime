@@ -3,8 +3,7 @@
 
 import unittest
 import sqlite3
-from database.base import Database, EmployeeTable
-
+from database.base import Database
 
 class TestDatabase(unittest.TestCase):
     def test_database_connection(self):
@@ -26,26 +25,3 @@ class TestDatabase(unittest.TestCase):
             cursor = db.execute("SELECT * FROM employees") # employees テーブルがある事前提
             self.assertIsInstance(cursor, sqlite3.Cursor) # カーソルオブジェクトである事を確認 
 
-class TestEmployeeTable(unittest.TestCase):
-    """ 従業員テーブル接続テスト"""
-
-    def setUp(self) -> None:
-        pass
-
-    def tearDown(self) -> None:
-        pass
-
-    def test_insert_employee(self) -> None:
-        pass
-
-    def test_select_all_employees(self) -> None:
-        pass
-
-    def test_get_employee_by_id(self) -> None:
-        pass
-
-    def test_update_employee(self) -> None:
-        pass
-
-    def test_delete_employee(self) -> None:
-        pass

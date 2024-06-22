@@ -16,7 +16,7 @@ class Database:
             sqlite3.OperationalError: DBファイルが無いか、接続に失敗した場合 
 
         """
-        if not os.path.exists(db_name):
+        if not os.path.exists(db_name) and db_name != ':memory:':
             raise sqlite3.OperationalError(f"DBファイルが見つかりません: {db_name}")
 
         try:
