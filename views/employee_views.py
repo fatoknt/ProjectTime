@@ -1,6 +1,7 @@
 # employee_views.py
 
 import click
+from models.employee_model import EmployeeModel
 
 class EmployeeViews:
     """従業員ビュークラス"""
@@ -23,7 +24,7 @@ class EmployeeViews:
             except KeyboardInterrupt:
                 raise # 例外を再送出し、呼び出し元で処理
     
-    def display_employee_list(self, employees: list[tuple]) -> None:
+    def display_employee_list(self, employees: list[EmployeeModel]) -> None:
         """従業員情報一覧を表示させます。
 
         Args:
@@ -35,7 +36,7 @@ class EmployeeViews:
 
         click.echo("従業員一覧:")
         for employee in employees:
-            click.echo(f"- ID: {employee[0]}, 名前: {employee[1]}")
+            click.echo(f"- ID: {employee.employee_id}, 名前: {employee.name}")
 
     def get_employee_id_input(self) -> int:
         """従業員IDを入力させます。
